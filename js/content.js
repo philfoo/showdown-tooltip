@@ -14,8 +14,8 @@ const callback = function(mutationsList, observer) {
 
         // Only trigger when a room is added
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-            let divId = mutation.addedNodes[0].id;
-            appendToolToBattleHTML(divId);
+            let roomId = mutation.addedNodes[0].id;
+            renderTool(roomId);
         }
     }
 };
@@ -28,34 +28,87 @@ document.addEventListener('DOMContentLoaded', observer.observe(targetNode, confi
 /*
 ---------------------------------- HELPER FUNCTIONS ----------------------------------
 */
-function createHTMLTool(){
-    let categories = ["Stats", "Moves", "Item", "Calc"];
+function createTool(roomId){
+    console.log("Creating tooltip for romm: " + roomId);
+    let nodes = []
 
-    let h2Nodes = [];
-    for (let category of categories) {
-        let h2Node = document.createElement("H3");
-        let textNode = document.createTextNode(category);
-        h2Node.appendChild(textNode);
-        h2Nodes.push(h2Node);
+    // Creating stats tooltip
+    {
+        let node = document.createElement("h3");
+        node.setAttribute("id", roomId + "-stats");
+
+        // node.addEventListener("mouseover", displayStats(roomId), false);
+        // node.addEventListener("mouseout", removeStats(roomId), false);
+
+        let textNode = document.createTextNode("Stats");
+        node.appendChild(textNode);
+        nodes.push(node);
     }
 
+    // Creating moves tooltip
+    {
+        let node = document.createElement("h3");
+        node.setAttribute("id", roomId + "-moves");
+
+        let textNode = document.createTextNode("Moves");
+        node.appendChild(textNode);
+        nodes.push(node);
+    }
+
+    // Creating item tooltip
+    {
+        let node = document.createElement("h3");
+        node.setAttribute("id", roomId + "-item");
+
+        let textNode = document.createTextNode("Item");
+        node.appendChild(textNode);
+        nodes.push(node);
+    }
+
+    // Creating calc tooltip
+    {
+        let node = document.createElement("h3");
+        node.setAttribute("id", roomId + "-calc");
+
+        let textNode = document.createTextNode("Calc");
+        node.appendChild(textNode);
+        nodes.push(node);
+    }
+
+    // Create parent container div
     let div = document.createElement("div");
-    for (let node of h2Nodes) {
+    for (let node of nodes) {
         div.appendChild(node);
     }
 
-    div.setAttribute("style", "position: absolute; top: 500px; left: 10px");
+    // Set div attributes
+    div.setAttribute("style", "position: absolute; top: 550px; left: 10px");
+    id = roomId + "-tooltip";
+    div.setAttribute("id", id);
+    
     return div;
 }
 
 
-function appendToolToBattleHTML(divId) {
+function renderTool(roomId) {
     // Only run for rooms that are battles
-    if (!divId.includes("room-battle-")) {
+    if (!roomId.includes("room-battle-")) {
         return;
     }
 
-    let tab = document.getElementById(divId);
-    var toolToAppend = createHTMLTool();
+    let tab = document.getElementById(roomId);
+    var toolToAppend = createTool(roomId);
     tab.appendChild(toolToAppend);
+}
+
+/*
+----------------------------------FOUR MAJOR FUNCTIONS----------------------------------------
+*/
+
+function displayStats(roomId) {
+    console.log("Stats");
+}
+
+function removeStats(roomId) {
+    console.log("Remove Stats");
 }
