@@ -37,8 +37,12 @@ function createTool(roomId){
         let node = document.createElement("h3");
         node.setAttribute("id", roomId + "-stats");
 
-        // node.addEventListener("mouseover", displayStats(roomId), false);
-        // node.addEventListener("mouseout", removeStats(roomId), false);
+        node.addEventListener("mouseover", function(event) {
+            displayStats(roomId);
+        }, true);
+        node.addEventListener("mouseout", function(event) {
+            removeStats(roomId);
+        }, true);
 
         let textNode = document.createTextNode("Stats");
         node.appendChild(textNode);
@@ -106,9 +110,9 @@ function renderTool(roomId) {
 */
 
 function displayStats(roomId) {
-    console.log("Stats");
+    console.log("Stats" + roomId);
 }
 
 function removeStats(roomId) {
-    console.log("Remove Stats");
+    console.log("Remove Stats" + roomId);
 }
