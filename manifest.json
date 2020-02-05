@@ -9,7 +9,7 @@
     "content_scripts": [
         {
             "matches": ["https://play.pokemonshowdown.com/*", "http://play.pokemonshowdown,com/*"],
-            "js": ["js/content.js"]
+            "js": ["js/bundle.js"]
         }
     ],
     "manifest_version": 2
