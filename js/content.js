@@ -1,3 +1,5 @@
+const stats = require("./stats.js");
+
 /*
 ----------------------------CREATE LISTENER FOR NEW TABS-------------------------------
 */
@@ -38,10 +40,10 @@ function createTool(roomId){
         node.setAttribute("id", roomId + "-stats");
 
         node.addEventListener("mouseover", function(event) {
-            displayStats(roomId);
+            stats.displayStats(roomId);
         }, true);
         node.addEventListener("mouseout", function(event) {
-            removeStats(roomId);
+            stats.removeStats(roomId);
         }, true);
 
         let textNode = document.createTextNode("Stats");
