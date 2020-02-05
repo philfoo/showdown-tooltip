@@ -1,0 +1,19 @@
+{
+  "name": "showdown-tooltip",
+  "version": "1.0.0",
+  "description": "Pokemon Showdown Tooltip",
+  "main": "js/content.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philfoo/showdown-tooltip.git"
+  },
+  "author": "Philip Foo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/philfoo/showdown-tooltip/issues"
+  },
+  "homepage": "https://github.com/philfoo/showdown-tooltip#readme",
+  "devDependencies": {
+    "webpack": "^4.41.5"
+  }
+}
