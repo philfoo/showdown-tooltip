@@ -2,7 +2,7 @@
   "name": "showdown-tooltip",
   "version": "1.0.0",
   "description": "Pokemon Showdown Tooltip",
-  "main": "js/content.js",
+  "main": "js/controller.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/philfoo/showdown-tooltip.git"

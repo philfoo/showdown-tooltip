@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./js/content.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./js/controller.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -97,25 +97,36 @@ eval("exports.BattleFormatsData = {\n\tbulbasaur: {\n\t\teventPokemon: [\n\t\t\t
 
 /***/ }),
 
-/***/ "./js/content.js":
-/*!***********************!*\
-  !*** ./js/content.js ***!
-  \***********************/
+/***/ "./js/controller.js":
+/*!**************************!*\
+  !*** ./js/controller.js ***!
+  \**************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const stats = __webpack_require__(/*! ./stats.js */ \"./js/stats.js\");\nconst moveData = __webpack_require__(/*! ./../data/rand-moves.js */ \"./data/rand-moves.js\");\n\n/*\n----------------------------CREATE LISTENER FOR NEW TABS-------------------------------\n*/\n\n// Observe 'body' element for mutations\nconst targetNode = document.querySelector(\"body\");\n\n// Only need to observe actions on children\nconst config = {childList: true};\n\n// Callback function to execute when mutations are observed\nconst callback = function(mutationsList, observer) {\n    for(let mutation of mutationsList) {\n\n        // Only trigger when a room is added\n        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {\n            let roomId = mutation.addedNodes[0].id;\n            renderTool(roomId);\n        }\n    }\n};\nconst observer = new MutationObserver(callback);\n\n// Listen for the creation of new child nodes (essentially new tabs)\ndocument.addEventListener('DOMContentLoaded', observer.observe(targetNode, config))\n\n\n/*\n---------------------------------- HELPER FUNCTIONS ----------------------------------\n*/\nfunction createTool(roomId){\n    console.log(\"Creating tooltip for romm: \" + roomId);\n    let nodes = []\n\n    // Creating stats tooltip\n    {\n        let node = document.createElement(\"h3\");\n        node.setAttribute(\"id\", roomId + \"-stats\");\n\n        node.addEventListener(\"mouseover\", function(event) {\n            stats.displayStats(roomId);\n        }, true);\n        node.addEventListener(\"mouseout\", function(event) {\n            stats.removeStats(roomId);\n        }, true);\n\n        let textNode = document.createTextNode(\"Stats\");\n        node.appendChild(textNode);\n        nodes.push(node);\n    }\n\n    // Creating moves tooltip\n    {\n        let node = document.createElement(\"h3\");\n        node.setAttribute(\"id\", roomId + \"-moves\");\n\n        let textNode = document.createTextNode(\"Moves\");\n        node.appendChild(textNode);\n        nodes.push(node);\n    }\n\n    // Creating item tooltip\n    {\n        let node = document.createElement(\"h3\");\n        node.setAttribute(\"id\", roomId + \"-item\");\n\n        let textNode = document.createTextNode(\"Item\");\n        node.appendChild(textNode);\n        nodes.push(node);\n    }\n\n    // Creating calc tooltip\n    {\n        let node = document.createElement(\"h3\");\n        node.setAttribute(\"id\", roomId + \"-calc\");\n\n        let textNode = document.createTextNode(\"Calc\");\n        node.appendChild(textNode);\n        nodes.push(node);\n    }\n\n    // Create parent container div\n    let div = document.createElement(\"div\");\n    for (let node of nodes) {\n        div.appendChild(node);\n    }\n\n    // Set div attributes\n    div.setAttribute(\"style\", \"position: absolute; top: 550px; left: 10px\");\n    id = roomId + \"-tooltip\";\n    div.setAttribute(\"id\", id);\n    \n    return div;\n}\n\n\nfunction renderTool(roomId) {\n    // Only run for rooms that are battles\n    if (!roomId.includes(\"room-battle-\")) {\n        return;\n    }\n\n    let tab = document.getElementById(roomId);\n    var toolToAppend = createTool(roomId);\n    tab.appendChild(toolToAppend);\n}\n\n/*\n----------------------------------FOUR MAJOR FUNCTIONS----------------------------------------\n*/\n\nfunction displayStats(roomId) {\n    console.log(\"Stats\" + roomId);\n}\n\nfunction removeStats(roomId) {\n    console.log(\"Remove Stats\" + roomId);\n}\n\n//# sourceURL=webpack:///./js/content.js?");
+eval("const stats = __webpack_require__(/*! ./model/stats.js */ \"./js/model/stats.js\");\nconst view = __webpack_require__(/*! ./view/view.js */ \"./js/view/view.js\");\nconst moveData = __webpack_require__(/*! ./../data/rand-moves.js */ \"./data/rand-moves.js\");\n\n/*\n----------------------------CREATE LISTENER FOR NEW TABS-------------------------------\n*/\n\n// Observe 'body' element for mutations\nconst targetNode = document.querySelector(\"body\");\n\n// Only need to observe actions on children\nconst config = {childList: true};\n\n// Callback function to execute when mutations are observed\nconst callback = function(mutationsList, observer) {\n    for(let mutation of mutationsList) {\n\n        // Only trigger when a room is added\n        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {\n            let roomId = mutation.addedNodes[0].id;\n            initializeTooltip(roomId);\n        }\n    }\n};\nconst observer = new MutationObserver(callback);\n\n// Listen for the creation of new child nodes (essentially new tabs)\ndocument.addEventListener('DOMContentLoaded', observer.observe(targetNode, config))\n\n\nfunction initializeTooltip(roomId) {\n    nodes = view.renderTooltip(roomId);\n\n    // Don't do anything if nodes list is null\n    if (nodes === null) {\n        console.log(\"Not a battle, not rendering tooltip\");\n        return;\n    }\n\n    // Stats\n    nodes[0].addEventListener(\"mouseover\", function(event) {\n        getAndDisplayStats(roomId);\n    }, true);\n    nodes[0].addEventListener(\"mouseout\", function(event) {\n        removeStats(roomId);\n    }, true);\n\n    // Moves \n    nodes[1].addEventListener(\"mouseover\", function(event) {\n        getAndDisplayMoves(roomId);\n    }, true);\n    nodes[1].addEventListener(\"mouseout\", function(event) {\n        removeMoves(roomId);\n    }, true);\n\n    // TOOD: Insert functionality for other categories here\n}\n\n/*\n---------------------------------- HELPER FUNCTIONS ----------------------------------\n*/\n\nfunction getAndDisplayStats(roomId) {\n    stats.displayStats(roomId);\n}\n\nfunction removeStats(roomId) {\n    stats.removeStats(roomId);\n}\n\nfunction getAndDisplayMoves(roomId) {\n    oppPokemon = view.retrieveOpponentsTeam(roomId);\n    console.log(oppPokemon);\n}\n\nfunction removeMoves(roomId) {\n}\n\n//# sourceURL=webpack:///./js/controller.js?");
 
 /***/ }),
 
-/***/ "./js/stats.js":
-/*!*********************!*\
-  !*** ./js/stats.js ***!
-  \*********************/
+/***/ "./js/model/stats.js":
+/*!***************************!*\
+  !*** ./js/model/stats.js ***!
+  \***************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("function displayStats(roomId) {\n    console.log(\"Stats\" + roomId);\n}\n\nfunction removeStats(roomId) {\n    console.log(\"Remove Stats\" + roomId);\n}\n\nmodule.exports = {\n    displayStats: displayStats,\n    removeStats: removeStats\n}\n\n//# sourceURL=webpack:///./js/stats.js?");
+eval("function displayStats(roomId) {\n    console.log(\"Stats\" + roomId);\n}\n\nfunction removeStats(roomId) {\n    console.log(\"Remove Stats\" + roomId);\n}\n\nmodule.exports = {\n    displayStats: displayStats,\n    removeStats: removeStats\n}\n\n//# sourceURL=webpack:///./js/model/stats.js?");
+
+/***/ }),
+
+/***/ "./js/view/view.js":
+/*!*************************!*\
+  !*** ./js/view/view.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/*\n * Returns the document nodes (Stats, Item, Moves) that were added to the page\n */\nfunction renderTooltip(roomId) {\n    // Return null for rooms that are not battles\n    if (!roomId.includes(\"room-battle-\")) {\n        return null;\n    }\n\n    let tab = document.getElementById(roomId);\n    let nodes = createFourViews(roomId);\n\n    // Create parent container div\n    let div = document.createElement(\"div\");\n    for (let node of nodes) {\n        div.appendChild(node);\n    }\n\n    // Set div attributes and append to battle tab\n    div.setAttribute(\"style\", \"position: absolute; top: 550px; left: 10px\");\n    id = roomId + \"-tooltip\";\n    div.setAttribute(\"id\", id);\n    tab.appendChild(div);\n\n    return nodes;\n}\n\nfunction createFourViews(roomId){\n    console.log(\"Creating tooltip for room: \" + roomId);\n    let nodes = []\n\n    // Creating stats view \n    {\n        let node = document.createElement(\"h3\");\n        node.setAttribute(\"id\", roomId + \"-stats\");\n\n        let textNode = document.createTextNode(\"Stats\");\n        node.appendChild(textNode);\n        nodes.push(node);\n    }\n\n    // Creating moves view \n    {\n        let node = document.createElement(\"h3\");\n        node.setAttribute(\"id\", roomId + \"-moves\");\n\n        let textNode = document.createTextNode(\"Moves\");\n        node.appendChild(textNode);\n        nodes.push(node);\n    }\n\n    // Creating item view \n    {\n        let node = document.createElement(\"h3\");\n        node.setAttribute(\"id\", roomId + \"-item\");\n\n        let textNode = document.createTextNode(\"Item\");\n        node.appendChild(textNode);\n        nodes.push(node);\n    }\n\n    // Creating calc view \n    {\n        let node = document.createElement(\"h3\");\n        node.setAttribute(\"id\", roomId + \"-calc\");\n\n        let textNode = document.createTextNode(\"Calc\");\n        node.appendChild(textNode);\n        nodes.push(node);\n    }\n\n    return nodes;\n}\n\n/*\n* @param {string} roomId        node id which identifies the div that the battle is contained in\n* @return {string arr} team     name of pokemon in opponents team UNCLEANED\n*/\nfunction retrieveOpponentsTeam(roomId) {\n    let tab = document.getElementById(roomId);\n    let trainerNode = tab.querySelector(\"div.battle > div.innerbattle > div.rightbar > div.trainer\");\n\n    // Retrieve raw inputs from page\n    let pokemonNames = [];\n    for (let child of trainerNode.childNodes) {\n        if (child.className === \"teamicons\") {\n            let teamIconNode = child;\n            \n            for (let span of teamIconNode.childNodes) {\n                let pokemonName = span.getAttribute(\"aria-label\");\n                pokemonNames.push(pokemonName);\n            }\n        }\n    }\n\n    return pokemonNames;\n}\n\nmodule.exports = {\n    renderTooltip: renderTooltip,\n    retrieveOpponentsTeam: retrieveOpponentsTeam\n}\n\n//# sourceURL=webpack:///./js/view/view.js?");
 
 /***/ })
 
