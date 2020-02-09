@@ -7,6 +7,9 @@
     "type": "git",
     "url": "git+https://github.com/philfoo/showdown-tooltip.git"
   },
+  "scripts": {
+    "build": "./node_modules/.bin/webpack --config webpack.config.js"
+  },
   "author": "Philip Foo",
   "license": "ISC",
   "bugs": {

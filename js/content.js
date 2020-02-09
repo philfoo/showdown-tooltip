@@ -1,4 +1,5 @@
 const stats = require("./stats.js");
+const moveData = require("./../data/rand-moves.js");
 
 /*
 ----------------------------CREATE LISTENER FOR NEW TABS-------------------------------
