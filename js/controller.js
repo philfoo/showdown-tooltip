@@ -1,6 +1,7 @@
 const stats = require("./model/stats.js");
+const moves = require("./model/moves.js");
+
 const view = require("./view/view.js");
-const moveData = require("./../data/rand-moves.js");
 
 /*
 ----------------------------CREATE LISTENER FOR NEW TABS-------------------------------
@@ -71,7 +72,9 @@ function removeStats(roomId) {
 
 function getAndDisplayMoves(roomId) {
     oppPokemon = view.retrieveOpponentsTeam(roomId);
-    console.log(oppPokemon);
+    pokemonMoves = moves.getPokemonMoves(oppPokemon);
+
+    console.log(pokemonMoves);
 }
 
 function removeMoves(roomId) {
