@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/philfoo/showdown-tooltip#readme",
   "devDependencies": {
-    "webpack": "^4.41.5"
+    "webpack": "^5.75.0"
   }
 }
